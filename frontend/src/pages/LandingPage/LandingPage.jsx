@@ -41,6 +41,7 @@ const LandingPage = () => {
             <Typography
               variant="h5"
               sx={{
+                fontSize: { xs: '1.25rem', sm: '1.5rem' },
                 fontWeight: 800,
                 background: 'linear-gradient(135deg, #0EA5E9 0%, #14B8A6 100%)',
                 WebkitBackgroundClip: 'text',
@@ -50,14 +51,17 @@ const LandingPage = () => {
             >
               MyCampusRide
             </Typography>
-            <Box display="flex" gap={2}>
+            <Box display="flex" gap={{ xs: 1, sm: 2 }}>
               <Button
                 variant="text"
-                startIcon={<Login />}
+                startIcon={<Login sx={{ display: { xs: 'none', sm: 'inline-block' } }} />}
                 onClick={() => navigate('/login')}
                 sx={{
                   color: '#1E293B',
                   fontWeight: 600,
+                  px: { xs: 1, sm: 2 },
+                  minWidth: { xs: 'auto', sm: '64px' },
+                  fontSize: { xs: '0.85rem', sm: '0.875rem' },
                   '&:hover': { bgcolor: 'rgba(14, 165, 233, 0.08)' },
                 }}
               >
@@ -65,13 +69,15 @@ const LandingPage = () => {
               </Button>
               <Button
                 variant="contained"
-                startIcon={<HowToReg />}
+                startIcon={<HowToReg sx={{ display: { xs: 'none', sm: 'inline-block' } }} />}
                 onClick={() => navigate('/register')}
                 sx={{
                   background: 'linear-gradient(135deg, #0EA5E9 0%, #14B8A6 100%)',
                   boxShadow: '0 4px 16px rgba(14, 165, 233, 0.3)',
                   fontWeight: 600,
-                  px: 3,
+                  px: { xs: 1.5, sm: 3 },
+                  py: { xs: 0.5, sm: 1 },
+                  fontSize: { xs: '0.85rem', sm: '0.875rem' },
                   '&:hover': {
                     background: 'linear-gradient(135deg, #0284C7 0%, #0F766E 100%)',
                     boxShadow: '0 6px 20px rgba(14, 165, 233, 0.4)',
