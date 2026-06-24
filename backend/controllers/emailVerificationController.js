@@ -71,37 +71,13 @@ const resendVerificationEmail = asyncHandler(async (req, res) => {
     });
   }
 
-  // Generate a new verification token
-  const verifyToken = user.createEmailVerificationToken();
+  // Email verification is disabled, just set the user as verified
+  user.isVerified = true;
   await user.save();
-
-  // Send verification email
-  const verifyURL = `${process.env.FRONTEND_URL || 'http://localhost:5173'}/verify-email?token=${verifyToken}`;
-  const message = `Please verify your email address by clicking the following link:\n\n${verifyURL}\n\nIf you did not request this, please ignore this email.`;
-
-  const html = getVerificationEmailHtml(verifyURL, user.name);
-
-  try {
-    await sendEmail({
-      email: user.email,
-      subject: 'MyCampusRide - Verify your email address',
-      message,
-      html
-    });
-  } catch (err) {
-    user.verificationToken = undefined;
-    user.verificationTokenExpires = undefined;
-    await user.save({ validateBeforeSave: false });
-    console.error('Email resend error:', err);
-    return res.status(500).json({
-      success: false,
-      message: 'There was an error sending the verification email. Please try again later.'
-    });
-  }
 
   res.status(200).json({
     success: true,
-    message: 'Verification email resent successfully! Please check your inbox.'
+    message: 'Email verification disabled. Your account has been verified successfully! Please log in.'
   });
 });
 

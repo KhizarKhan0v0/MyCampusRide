@@ -141,38 +141,14 @@ const register = asyncHandler(async (req, res) => {
     });
   }
 
-  // 5. Create user and generate verification token
+  // 5. Create user and set as verified by default (Email verification disabled)
   const user = new User(userData);
-  const verifyToken = user.createEmailVerificationToken();
+  user.isVerified = true;
   await user.save();
-
-  // Send verification email
-  const verifyURL = `${process.env.FRONTEND_URL || 'http://localhost:5173'}/verify-email?token=${verifyToken}`;
-  const message = `Please verify your email address by clicking the following link:\n\n${verifyURL}\n\nIf you did not request this, please ignore this email.`;
-
-  const html = getVerificationEmailHtml(verifyURL, user.name);
-
-  try {
-    await sendEmail({
-      email: user.email,
-      subject: 'MyCampusRide - Verify your email address',
-      message,
-      html
-    });
-  } catch (err) {
-    user.verificationToken = undefined;
-    user.verificationTokenExpires = undefined;
-    await user.save({ validateBeforeSave: false });
-    console.error('Email send error:', err);
-    return res.status(500).json({
-      success: false,
-      message: 'There was an error sending the verification email. Please try again later.'
-    });
-  }
 
   res.status(201).json({
     success: true,
-    message: 'Registration successful! Please check your email to verify your account.',
+    message: 'Registration successful!',
     data: {
       user
     }
@@ -203,13 +179,13 @@ const login = asyncHandler(async (req, res) => {
     });
   }
 
-  // Check if user is verified
-  if (!user.isVerified) {
-    return res.status(401).json({
-      success: false,
-      message: 'Please verify your email address to log in'
-    });
-  }
+  // Check if user is verified (Disabled)
+  // if (!user.isVerified) {
+  //   return res.status(401).json({
+  //     success: false,
+  //     message: 'Please verify your email address to log in'
+  //   });
+  // }
 
   // Check if user is suspended
   if (user.status === 'suspended') {
